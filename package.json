@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier . --write",
+    "generate-types": "npx supabase gen types typescript --project-id xzbxgpjvspkmtsrjjfgj --schema public > lib/supabase/database.types.ts"
   },
   "dependencies": {
     "react": "19.2.0",
@@ -14,13 +16,41 @@
     "next": "16.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1"
+    "eslint-config-next": "16.0.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "shadcn": "^3.5.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "postcss": {
+    "plugins": [
+      "@tailwindcss/postcss"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "printWidth": 100,
+    "plugins": [
+      "prettier-plugin-organize-imports",
+      "prettier-plugin-tailwindcss"
+    ],
+    "organizeImportsSkipDestructiveCodeActions": true,
+    "tailwindStylesheet": "./app/globals.css",
+    "tailwindFunctions": [
+      "twMerge",
+      "clsx",
+      "cn"
+    ]
   }
 }
