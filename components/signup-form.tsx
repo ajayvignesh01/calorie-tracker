@@ -30,7 +30,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
               </div>
               <Field>
                 <FieldLabel htmlFor='email'>Email</FieldLabel>
-                <Input id='email' type='email' placeholder='m@example.com' required />
+                <Input id='email' name='email' type='email' placeholder='m@example.com' required />
                 <FieldDescription>
                   We&apos;ll use this to contact you. We will not share your email with anyone else.
                 </FieldDescription>
@@ -39,11 +39,11 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                 <Field className='grid grid-cols-2 gap-4'>
                   <Field>
                     <FieldLabel htmlFor='password'>Password</FieldLabel>
-                    <Input id='password' type='password' required />
+                    <Input id='password' name='password' type='password' required />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor='confirm-password'>Confirm Password</FieldLabel>
-                    <Input id='confirm-password' type='password' required />
+                    <Input id='confirm-password' name='confirm-password' type='password' required />
                   </Field>
                 </Field>
                 <FieldDescription>Must be at least 8 characters long.</FieldDescription>
