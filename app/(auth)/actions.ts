@@ -16,11 +16,25 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { error, data: authData } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
     console.error('error logging in', error)
     redirect('/error')
+  }
+
+  // Check if user has completed onboarding
+  if (authData.user) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('onboarding_completed')
+      .eq('id', authData.user.id)
+      .single()
+
+    if (!profile || !profile.onboarding_completed) {
+      revalidatePath('/', 'layout')
+      redirect('/onboarding')
+    }
   }
 
   revalidatePath('/', 'layout')
@@ -45,7 +59,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/onboarding')
 }
 
 export async function signInWithGoogle() {

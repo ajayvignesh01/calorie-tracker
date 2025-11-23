@@ -8,6 +8,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      user_profiles: {
+        Row: {
+          id: string
+          full_name: string | null
+          date_of_birth: string | null
+          gender: string | null
+          height_cm: number | null
+          weight_kg: number | null
+          activity_level: string | null
+          goal: string | null
+          daily_calorie_target: number | null
+          daily_protein_target: number | null
+          daily_carbs_target: number | null
+          daily_fat_target: number | null
+          onboarding_completed: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          full_name?: string | null
+          date_of_birth?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          activity_level?: string | null
+          goal?: string | null
+          daily_calorie_target?: number | null
+          daily_protein_target?: number | null
+          daily_carbs_target?: number | null
+          daily_fat_target?: number | null
+          onboarding_completed?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string | null
+          date_of_birth?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          activity_level?: string | null
+          goal?: string | null
+          daily_calorie_target?: number | null
+          daily_protein_target?: number | null
+          daily_carbs_target?: number | null
+          daily_fat_target?: number | null
+          onboarding_completed?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_profiles_id_fkey'
+            columns: ['id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       food_entries: {
         Row: {
           id: string
