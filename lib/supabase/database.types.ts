@@ -8,7 +8,53 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      food_entries: {
+        Row: {
+          id: string
+          user_id: string
+          food_name: string
+          quantity: string | null
+          calories: number
+          protein: number
+          carbs: number
+          fat: number
+          image_url: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          food_name: string
+          quantity?: string | null
+          calories?: number
+          protein?: number
+          carbs?: number
+          fat?: number
+          image_url?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          food_name?: string
+          quantity?: string | null
+          calories?: number
+          protein?: number
+          carbs?: number
+          fat?: number
+          image_url?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'food_entries_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

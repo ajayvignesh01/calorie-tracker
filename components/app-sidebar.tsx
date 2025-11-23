@@ -37,7 +37,7 @@ const data = {
       items: [
         {
           title: 'History',
-          url: '#'
+          url: '/history'
         },
         {
           title: 'Add',
@@ -45,7 +45,7 @@ const data = {
         },
         {
           title: 'Analyze',
-          url: '#'
+          url: '/'
         }
       ]
     }

@@ -5,7 +5,8 @@ import type React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import { Upload } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { Check, Upload } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -25,6 +26,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<FoodResult[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState(false)
+
+  const supabase = createClient()
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -34,6 +38,7 @@ export default function Home() {
         setImage(reader.result as string)
         setResults(null)
         setError(null)
+        setSaved(false)
       }
       reader.readAsDataURL(file)
     }
@@ -45,6 +50,7 @@ export default function Home() {
     setLoading(true)
     setError(null)
     setResults(null)
+    setSaved(false)
 
     try {
       const response = await fetch('/api/analyze-food', {
@@ -59,6 +65,31 @@ export default function Home() {
 
       const data = await response.json()
       setResults(data.foods)
+
+      // Auto-save to database
+      const {
+        data: { user }
+      } = await supabase.auth.getUser()
+
+      if (user && data.foods && data.foods.length > 0) {
+        const entries = data.foods.map((food: FoodResult) => ({
+          user_id: user.id,
+          food_name: food.foodName,
+          quantity: food.quantity,
+          calories: food.calories,
+          protein: food.protein,
+          carbs: food.carbs,
+          fat: food.fat
+        }))
+
+        const { error: saveError } = await supabase.from('food_entries').insert(entries)
+
+        if (saveError) {
+          console.error('Failed to save entries:', saveError)
+        } else {
+          setSaved(true)
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -198,6 +229,13 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
+            )}
+
+            {saved && (
+              <div className='flex items-center justify-center gap-2 rounded-lg bg-green-500/10 p-3 text-green-600'>
+                <Check className='size-4' />
+                <p className='text-sm font-medium'>Saved to your food history</p>
+              </div>
             )}
 
             <p className='text-center text-xs text-muted-foreground'>
