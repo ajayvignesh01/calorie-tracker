@@ -1,21 +1,12 @@
 'use client'
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Settings,
-  Sparkles
-} from 'lucide-react'
+import { ChevronsUpDown, LogOut } from 'lucide-react'
 
 import { signOut } from '@/app/(auth)/actions'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -29,7 +20,6 @@ import {
 } from '@/components/ui/sidebar'
 import { useUserDataStore } from '@/lib/stores/user-data'
 import { createClient } from '@/lib/supabase/client'
-import Link from 'next/link'
 import useSWR from 'swr/immutable'
 
 export function NavUser() {
@@ -93,15 +83,6 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link href='/settings'>
-                  <Settings />
-                  Settings
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>
               <LogOut />

@@ -26,39 +26,65 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-  // IMPORTANT: Don't remove getClaims()
   const { data } = await supabase.auth.getClaims()
-
   const user = data?.claims
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/signup') &&
-    !request.nextUrl.pathname.startsWith('/api/auth') &&
-    !request.nextUrl.pathname.startsWith('/error')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  const pathname = request.nextUrl.pathname
+
+  // Public routes that don't need auth
+  const publicRoutes = ['/login', '/signup', '/doctor/login', '/doctor/signup', '/error', '/api/auth']
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
+
+  // If no user and trying to access protected route, redirect to appropriate login
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    if (pathname.startsWith('/doctor')) {
+      url.pathname = '/doctor/login'
+    } else {
+      url.pathname = '/login'
+    }
     return NextResponse.redirect(url)
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // If user is logged in, check their role and redirect accordingly
+  if (user) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', user.sub)
+      .single()
+
+    const isDoctor = profile?.role === 'doctor'
+    const isDoctorRoute = pathname.startsWith('/doctor')
+
+    // Doctor trying to access user routes -> redirect to doctor dashboard
+    if (isDoctor && !isDoctorRoute && !isPublicRoute) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/doctor/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    // User trying to access doctor routes -> redirect to user home
+    if (!isDoctor && isDoctorRoute && !isPublicRoute) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+
+    // Logged in doctor trying to access doctor login -> redirect to dashboard
+    if (isDoctor && pathname === '/doctor/login') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/doctor/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    // Logged in user trying to access user login -> redirect to home
+    if (!isDoctor && pathname === '/login') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+  }
 
   return supabaseResponse
 }

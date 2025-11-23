@@ -1,16 +1,11 @@
 'use client'
 
 import {
-  BookOpen,
-  Bot,
   Command,
-  Frame,
   LifeBuoy,
-  Map,
-  PieChart,
   Send,
-  Settings2,
-  SquareTerminal
+  SquareTerminal,
+  User
 } from 'lucide-react'
 import * as React from 'react'
 
@@ -37,7 +32,7 @@ const data = {
       items: [
         {
           title: 'History',
-          url: '#'
+          url: '/history'
         },
         {
           title: 'Add',
@@ -45,9 +40,16 @@ const data = {
         },
         {
           title: 'Analyze',
-          url: '#'
+          url: '/'
         }
       ]
+    },
+    {
+      title: 'My Profile',
+      url: '/profile',
+      icon: User,
+      isActive: false,
+      items: []
     }
     // {
     //   title: 'Models',
@@ -125,23 +127,6 @@ const data = {
       title: 'Feedback',
       url: '#',
       icon: Send
-    }
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map
     }
   ]
 }

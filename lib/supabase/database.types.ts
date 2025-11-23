@@ -8,7 +8,157 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      user_profiles: {
+        Row: {
+          id: string
+          full_name: string | null
+          date_of_birth: string | null
+          gender: string | null
+          height_cm: number | null
+          weight_kg: number | null
+          activity_level: string | null
+          goal: string | null
+          daily_calorie_target: number | null
+          daily_protein_target: number | null
+          daily_carbs_target: number | null
+          daily_fat_target: number | null
+          onboarding_completed: boolean
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          full_name?: string | null
+          date_of_birth?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          activity_level?: string | null
+          goal?: string | null
+          daily_calorie_target?: number | null
+          daily_protein_target?: number | null
+          daily_carbs_target?: number | null
+          daily_fat_target?: number | null
+          onboarding_completed?: boolean
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string | null
+          date_of_birth?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          weight_kg?: number | null
+          activity_level?: string | null
+          goal?: string | null
+          daily_calorie_target?: number | null
+          daily_protein_target?: number | null
+          daily_carbs_target?: number | null
+          daily_fat_target?: number | null
+          onboarding_completed?: boolean
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_profiles_id_fkey'
+            columns: ['id']
+            isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      doctor_patients: {
+        Row: {
+          id: string
+          doctor_id: string
+          patient_id: string
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          doctor_id: string
+          patient_id: string
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          doctor_id?: string
+          patient_id?: string
+          status?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'doctor_patients_doctor_id_fkey'
+            columns: ['doctor_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'doctor_patients_patient_id_fkey'
+            columns: ['patient_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      food_entries: {
+        Row: {
+          id: string
+          user_id: string
+          food_name: string
+          quantity: string | null
+          calories: number
+          protein: number
+          carbs: number
+          fat: number
+          image_url: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          food_name: string
+          quantity?: string | null
+          calories?: number
+          protein?: number
+          carbs?: number
+          fat?: number
+          image_url?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          food_name?: string
+          quantity?: string | null
+          calories?: number
+          protein?: number
+          carbs?: number
+          fat?: number
+          image_url?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'food_entries_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
