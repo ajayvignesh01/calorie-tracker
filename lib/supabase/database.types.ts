@@ -23,6 +23,7 @@ export type Database = {
           daily_carbs_target: number | null
           daily_fat_target: number | null
           onboarding_completed: boolean
+          role: string
           created_at: string
           updated_at: string
         }
@@ -40,6 +41,7 @@ export type Database = {
           daily_carbs_target?: number | null
           daily_fat_target?: number | null
           onboarding_completed?: boolean
+          role?: string
           created_at?: string
           updated_at?: string
         }
@@ -57,6 +59,7 @@ export type Database = {
           daily_carbs_target?: number | null
           daily_fat_target?: number | null
           onboarding_completed?: boolean
+          role?: string
           created_at?: string
           updated_at?: string
         }
@@ -65,6 +68,45 @@ export type Database = {
             foreignKeyName: 'user_profiles_id_fkey'
             columns: ['id']
             isOneToOne: true
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      doctor_patients: {
+        Row: {
+          id: string
+          doctor_id: string
+          patient_id: string
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          doctor_id: string
+          patient_id: string
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          doctor_id?: string
+          patient_id?: string
+          status?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'doctor_patients_doctor_id_fkey'
+            columns: ['doctor_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'doctor_patients_patient_id_fkey'
+            columns: ['patient_id']
+            isOneToOne: false
             referencedRelation: 'users'
             referencedColumns: ['id']
           }

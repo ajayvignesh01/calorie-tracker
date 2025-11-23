@@ -7,10 +7,13 @@ import { createClient } from '@/lib/supabase/client'
 import {
   Activity,
   Calendar,
+  Check,
+  Copy,
   Flame,
   Pencil,
   Ruler,
   Scale,
+  Share2,
   Target,
   TrendingDown,
   TrendingUp,
@@ -62,6 +65,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [todayStats, setTodayStats] = useState<TodayStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
 
   const router = useRouter()
   const supabase = createClient()
@@ -378,6 +382,37 @@ export default function ProfilePage() {
                 </p>
                 <p className='text-muted-foreground text-xs'>grams/day</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Share with Doctor */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <Share2 className='size-5' />
+              Share with Doctor
+            </CardTitle>
+            <CardDescription>
+              Give this ID to your doctor so they can monitor your progress
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className='flex items-center gap-2'>
+              <code className='flex-1 rounded-lg bg-muted px-4 py-3 font-mono text-sm'>
+                {profile.id}
+              </code>
+              <Button
+                variant='outline'
+                size='icon'
+                onClick={() => {
+                  navigator.clipboard.writeText(profile.id)
+                  setCopied(true)
+                  setTimeout(() => setCopied(false), 2000)
+                }}
+              >
+                {copied ? <Check className='size-4 text-green-500' /> : <Copy className='size-4' />}
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -145,6 +145,7 @@ export default function OnboardingPage() {
       daily_carbs_target: targets.carbs,
       daily_fat_target: targets.fat,
       onboarding_completed: true,
+      role: 'user',
       updated_at: new Date().toISOString()
     })
 
