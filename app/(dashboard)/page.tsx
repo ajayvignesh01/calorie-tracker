@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase/client'
-import { Check, Upload } from 'lucide-react'
+import { Check, Upload, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Input } from '@/components/ui/input'
 
 interface FoodResult {
   foodName: string
@@ -65,36 +66,58 @@ export default function Home() {
 
       const data = await response.json()
       setResults(data.foods)
-
-      // Auto-save to database
-      const {
-        data: { user }
-      } = await supabase.auth.getUser()
-
-      if (user && data.foods && data.foods.length > 0) {
-        const entries = data.foods.map((food: FoodResult) => ({
-          user_id: user.id,
-          food_name: food.foodName,
-          quantity: food.quantity,
-          calories: food.calories,
-          protein: food.protein,
-          carbs: food.carbs,
-          fat: food.fat
-        }))
-
-        const { error: saveError } = await supabase.from('food_entries').insert(entries)
-
-        if (saveError) {
-          console.error('Failed to save entries:', saveError)
-        } else {
-          setSaved(true)
-        }
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateFoodResult = (index: number, field: keyof FoodResult, value: string | number) => {
+    if (!results) return
+    const updated = [...results]
+    if (field === 'calories' || field === 'protein' || field === 'carbs' || field === 'fat') {
+      updated[index] = { ...updated[index], [field]: Number(value) || 0 }
+    } else {
+      updated[index] = { ...updated[index], [field]: value }
+    }
+    setResults(updated)
+  }
+
+  const saveToHistory = async () => {
+    if (!results) return
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (user && results.length > 0) {
+      const entries = results.map((food: FoodResult) => ({
+        user_id: user.id,
+        food_name: food.foodName,
+        quantity: food.quantity,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat
+      }))
+
+      const { error: saveError } = await supabase.from('food_entries').insert(entries)
+
+      if (saveError) {
+        console.error('Failed to save entries:', saveError)
+        setError('Failed to save to history')
+      } else {
+        setSaved(true)
+      }
+    }
+  }
+
+  const discardResults = () => {
+    setResults(null)
+    setImage(null)
+    setSaved(false)
+    setError(null)
   }
 
   const totals = results
@@ -169,13 +192,25 @@ export default function Home() {
           </Card>
         )}
 
-        {results && (
+        {results && !saved && (
           <div className='space-y-4'>
             {results.map((result, index) => (
               <Card key={index}>
                 <CardHeader>
-                  <CardTitle>{result.foodName}</CardTitle>
-                  <CardDescription>{result.quantity}</CardDescription>
+                  <div className='space-y-2'>
+                    <Input
+                      value={result.foodName}
+                      onChange={(e) => updateFoodResult(index, 'foodName', e.target.value)}
+                      className='text-lg font-semibold'
+                      placeholder='Food name'
+                    />
+                    <Input
+                      value={result.quantity}
+                      onChange={(e) => updateFoodResult(index, 'quantity', e.target.value)}
+                      className='text-sm text-muted-foreground'
+                      placeholder='Quantity'
+                    />
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {result.error && (
@@ -183,22 +218,46 @@ export default function Home() {
                   )}
                   <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
                     <div className='space-y-1 rounded-lg bg-muted p-3'>
-                      <p className='text-xs text-muted-foreground'>Calories</p>
-                      <p className='text-2xl font-bold'>{result.calories}</p>
+                      <label className='text-xs text-muted-foreground'>Calories</label>
+                      <Input
+                        type='number'
+                        value={result.calories}
+                        onChange={(e) => updateFoodResult(index, 'calories', e.target.value)}
+                        className='h-8 text-xl font-bold'
+                      />
                     </div>
                     <div className='space-y-1 rounded-lg bg-muted p-3'>
-                      <p className='text-xs text-muted-foreground'>Protein</p>
-                      <p className='text-lg font-semibold'>{result.protein}g</p>
+                      <label className='text-xs text-muted-foreground'>Protein (g)</label>
+                      <Input
+                        type='number'
+                        step='0.1'
+                        value={result.protein}
+                        onChange={(e) => updateFoodResult(index, 'protein', e.target.value)}
+                        className='h-8 text-lg font-semibold'
+                      />
                     </div>
                     <div className='space-y-1 rounded-lg bg-muted p-3'>
-                      <p className='text-xs text-muted-foreground'>Carbs</p>
-                      <p className='text-lg font-semibold'>{result.carbs}g</p>
+                      <label className='text-xs text-muted-foreground'>Carbs (g)</label>
+                      <Input
+                        type='number'
+                        step='0.1'
+                        value={result.carbs}
+                        onChange={(e) => updateFoodResult(index, 'carbs', e.target.value)}
+                        className='h-8 text-lg font-semibold'
+                      />
                     </div>
                     <div className='space-y-1 rounded-lg bg-muted p-3'>
-                      <p className='text-xs text-muted-foreground'>Fat</p>
-                      <p className='text-lg font-semibold'>{result.fat}g</p>
+                      <label className='text-xs text-muted-foreground'>Fat (g)</label>
+                      <Input
+                        type='number'
+                        step='0.1'
+                        value={result.fat}
+                        onChange={(e) => updateFoodResult(index, 'fat', e.target.value)}
+                        className='h-8 text-lg font-semibold'
+                      />
                     </div>
                   </div>
+                  <p className='mt-2 text-xs text-muted-foreground'>Source: {result.source}</p>
                 </CardContent>
               </Card>
             ))}
@@ -231,16 +290,28 @@ export default function Home() {
               </Card>
             )}
 
-            {saved && (
-              <div className='flex items-center justify-center gap-2 rounded-lg bg-green-500/10 p-3 text-green-600'>
-                <Check className='size-4' />
-                <p className='text-sm font-medium'>Saved to your food history</p>
-              </div>
-            )}
+            <div className='flex gap-3'>
+              <Button onClick={saveToHistory} className='flex-1' size='lg'>
+                <Check className='mr-2 size-4' />
+                Save to History
+              </Button>
+              <Button onClick={discardResults} variant='outline' size='lg'>
+                <X className='mr-2 size-4' />
+                Discard
+              </Button>
+            </div>
+          </div>
+        )}
 
-            <p className='text-center text-xs text-muted-foreground'>
-              Data source: USDA FoodData Central
-            </p>
+        {saved && (
+          <div className='space-y-4'>
+            <div className='flex items-center justify-center gap-2 rounded-lg bg-green-500/10 p-3 text-green-600'>
+              <Check className='size-4' />
+              <p className='text-sm font-medium'>Saved to your food history</p>
+            </div>
+            <Button onClick={discardResults} variant='outline' className='w-full'>
+              Analyze Another Meal
+            </Button>
           </div>
         )}
       </div>
