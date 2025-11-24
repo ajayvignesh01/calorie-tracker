@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { createClient } from '@/lib/supabase/client'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface FoodEntry {
@@ -40,6 +40,7 @@ export default function HistoryPage() {
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
   const supabase = createClient()
 
@@ -122,6 +123,47 @@ export default function HistoryPage() {
       setSelectedDay(day)
       setIsModalOpen(true)
     }
+  }
+
+  const handleDeleteEntry = async (entryId: string) => {
+    setDeleting(entryId)
+
+    const { error } = await supabase.from('food_entries').delete().eq('id', entryId)
+
+    if (error) {
+      console.error('Error deleting entry:', error)
+      setDeleting(null)
+      return
+    }
+
+    // Update local state
+    setFoodEntries((prev) => prev.filter((e) => e.id !== entryId))
+
+    // Update selected day entries
+    if (selectedDay) {
+      const updatedEntries = selectedDay.entries.filter((e) => e.id !== entryId)
+      if (updatedEntries.length === 0) {
+        setIsModalOpen(false)
+        setSelectedDay(null)
+      } else {
+        const updatedTotals = updatedEntries.reduce(
+          (acc, entry) => ({
+            calories: acc.calories + entry.calories,
+            protein: acc.protein + Number(entry.protein),
+            carbs: acc.carbs + Number(entry.carbs),
+            fat: acc.fat + Number(entry.fat)
+          }),
+          { calories: 0, protein: 0, carbs: 0, fat: 0 }
+        )
+        setSelectedDay({
+          ...selectedDay,
+          entries: updatedEntries,
+          totals: updatedTotals
+        })
+      }
+    }
+
+    setDeleting(null)
   }
 
   const goToPreviousMonth = () => {
@@ -312,7 +354,17 @@ export default function HistoryPage() {
                           <p className='text-muted-foreground text-sm'>{entry.quantity}</p>
                         )}
                       </div>
-                      <p className='font-semibold text-orange-500'>{entry.calories} cal</p>
+                      <div className='flex items-center gap-2'>
+                        <p className='font-semibold text-orange-500'>{entry.calories} cal</p>
+                        <button
+                          onClick={() => handleDeleteEntry(entry.id)}
+                          disabled={deleting === entry.id}
+                          className='rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50'
+                          title='Delete entry'
+                        >
+                          <Trash2 className='size-4' />
+                        </button>
+                      </div>
                     </div>
                     <div className='mt-2 flex gap-4 text-sm'>
                       <span className='text-blue-500'>P: {entry.protein}g</span>

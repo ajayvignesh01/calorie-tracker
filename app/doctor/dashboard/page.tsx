@@ -185,8 +185,9 @@ export default function DoctorDashboardPage() {
       } else {
         setSearchError(data.error || 'No patient found with that ID')
       }
-    } catch {
-      setSearchError('Failed to search for patient')
+    } catch (err) {
+      console.error('Search error:', err)
+      setSearchError(`Failed to search for patient: ${err instanceof Error ? err.message : 'Unknown error'}`)
     }
 
     setSearching(false)
