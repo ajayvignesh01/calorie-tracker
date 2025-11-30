@@ -15,7 +15,6 @@ export default function DoctorSignupPage() {
   const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
 
   const router = useRouter()
   const supabase = createClient()
@@ -40,35 +39,25 @@ export default function DoctorSignupPage() {
         return
       }
 
-      setSuccess(true)
+      // Automatically sign in the user
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+
+      if (signInError) {
+        setError('Account created but failed to sign in. Please try logging in.')
+        setLoading(false)
+        return
+      }
+
+      // Redirect to doctor dashboard
+      router.push('/doctor/dashboard')
     } catch {
       setError('An unexpected error occurred')
     }
 
     setLoading(false)
-  }
-
-  if (success) {
-    return (
-      <div className='flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4 dark:from-blue-950 dark:to-background'>
-        <Card className='w-full max-w-md'>
-          <CardHeader className='text-center'>
-            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900'>
-              <Stethoscope className='h-8 w-8 text-green-600 dark:text-green-400' />
-            </div>
-            <CardTitle className='text-2xl'>Account Created!</CardTitle>
-            <CardDescription>
-              Please check your email to verify your account, then sign in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className='w-full' onClick={() => router.push('/doctor/login')}>
-              Go to Sign In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
   }
 
   return (
@@ -127,7 +116,7 @@ export default function DoctorSignupPage() {
             </div>
 
             <Button type='submit' className='w-full' disabled={loading}>
-              {loading ? 'Creating Account...' : 'Create Doctor Account'}
+              {loading ? 'Creating Account & Signing In...' : 'Create Doctor Account'}
             </Button>
           </form>
 
