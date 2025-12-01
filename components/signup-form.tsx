@@ -60,6 +60,9 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
               <FieldDescription className='text-center'>
                 Already have an account? <Link href='/login/patient'>Sign in</Link>
               </FieldDescription>
+              <FieldDescription className='text-center'>
+                Not a patient? <Link href='/signup/doctor'>Sign up as a doctor</Link>
+              </FieldDescription>
             </FieldGroup>
           </form>
           <div className='relative hidden bg-muted md:block'>

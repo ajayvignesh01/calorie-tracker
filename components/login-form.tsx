@@ -53,6 +53,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               <FieldDescription className='text-center'>
                 Don&apos;t have an account? <Link href='/signup/patient'>Sign up</Link>
               </FieldDescription>
+              <FieldDescription className='text-center'>
+                Not a patient? <Link href='/login/doctor'>Sign in as a doctor</Link>
+              </FieldDescription>
             </FieldGroup>
           </form>
           <div className='relative hidden bg-muted md:block'>

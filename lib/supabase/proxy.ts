@@ -34,6 +34,7 @@ export async function updateSession(request: NextRequest) {
   // Public routes that don't need auth (API routes handle their own auth)
   const publicRoutes = [
     '/login',
+    '/signup',
     '/login/patient',
     '/signup/patient',
     '/login/doctor',
@@ -49,7 +50,7 @@ export async function updateSession(request: NextRequest) {
     if (pathname.startsWith('/doctor')) {
       url.pathname = '/login/doctor'
     } else {
-      url.pathname = '/login/patient'
+      url.pathname = '/login'
     }
     return NextResponse.redirect(url)
   }
