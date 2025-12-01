@@ -189,20 +189,21 @@ export default function Home() {
             <CardDescription>Take or upload a clear photo of your meal</CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
-            <div className='flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 p-8 text-center transition-colors hover:border-muted-foreground/50'>
-              <input
-                type='file'
-                accept='image/*'
-                onChange={handleImageChange}
-                className='hidden'
-                id='image-input'
-              />
-              <label htmlFor='image-input' className='flex cursor-pointer flex-col items-center'>
-                <Upload className='mb-2 size-10 text-muted-foreground' />
-                <p className='mb-1 text-sm font-medium'>Click to upload or drag and drop</p>
-                <p className='text-xs text-muted-foreground'>PNG, JPG, GIF up to 10MB</p>
-              </label>
-            </div>
+            <input
+              type='file'
+              accept='image/*'
+              onChange={handleImageChange}
+              className='hidden'
+              id='image-input'
+            />
+            <label
+              htmlFor='image-input'
+              className='flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 p-8 text-center transition-colors hover:border-muted-foreground/50'
+            >
+              <Upload className='mb-2 size-10 text-muted-foreground' />
+              <p className='mb-1 text-sm font-medium'>Click to upload or drag and drop</p>
+              <p className='text-xs text-muted-foreground'>PNG, JPG, GIF up to 10MB</p>
+            </label>
 
             {image && (
               <div className='relative aspect-video w-full overflow-hidden rounded-lg border bg-muted'>
