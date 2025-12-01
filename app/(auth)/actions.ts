@@ -33,12 +33,12 @@ export async function login(formData: FormData) {
 
     if (!profile || !profile.onboarding_completed) {
       revalidatePath('/', 'layout')
-      redirect('/onboarding')
+      redirect('/patient/onboarding')
     }
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/patient/dashboard')
 }
 
 export async function signup(formData: FormData) {
@@ -59,7 +59,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/onboarding')
+  redirect('/patient/onboarding')
 }
 
 export async function signInWithGoogle() {

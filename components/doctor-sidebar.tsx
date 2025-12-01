@@ -1,10 +1,9 @@
 'use client'
 
-import { LayoutDashboard, LifeBuoy, LogOut, Send, Stethoscope } from 'lucide-react'
+import { LayoutDashboard, LogOut, Stethoscope } from 'lucide-react'
 import * as React from 'react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavSecondary } from '@/components/nav-secondary'
 import {
   Sidebar,
   SidebarContent,
@@ -25,18 +24,6 @@ const data = {
       icon: LayoutDashboard,
       isActive: true,
       items: []
-    }
-  ],
-  navSecondary: [
-    {
-      title: 'Support',
-      url: '#',
-      icon: LifeBuoy
-    },
-    {
-      title: 'Feedback',
-      url: '#',
-      icon: Send
     }
   ]
 }
@@ -71,7 +58,6 @@ export function DoctorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>

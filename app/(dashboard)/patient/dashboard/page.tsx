@@ -10,6 +10,7 @@ import { Check, Upload, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
+import heic2any from 'heic2any'
 
 interface FoodResult {
   foodName: string
@@ -31,17 +32,46 @@ export default function Home() {
 
   const supabase = createClient()
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImage(reader.result as string)
-        setResults(null)
-        setError(null)
-        setSaved(false)
+      try {
+        let fileToRead = file
+
+        // Check if the file is HEIC/HEIF and convert it to JPEG
+        if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+          setLoading(true)
+          try {
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: 'image/jpeg',
+              quality: 0.9
+            })
+            // heic2any can return Blob or Blob[], handle both cases
+            const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+            fileToRead = new File([blob], file.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' })
+          } catch (conversionError) {
+            console.error('HEIC conversion error:', conversionError)
+            setError('Failed to convert HEIC image. Please use JPG or PNG format.')
+            setLoading(false)
+            return
+          } finally {
+            setLoading(false)
+          }
+        }
+
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setImage(reader.result as string)
+          setResults(null)
+          setError(null)
+          setSaved(false)
+        }
+        reader.readAsDataURL(fileToRead)
+      } catch (err) {
+        setError('Failed to load image. Please try another file.')
+        console.error('Image load error:', err)
       }
-      reader.readAsDataURL(file)
     }
   }
 
