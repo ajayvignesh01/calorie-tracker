@@ -226,7 +226,7 @@ export default function PatientDetailPage() {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-gradient-to-b from-blue-50 to-white p-6 dark:from-blue-950 dark:to-background'>
+      <div className='min-h-screen bg-gradient-to-b from-muted to-background p-6 dark:from-blue-950 dark:to-background'>
         <div className='mx-auto max-w-6xl space-y-6'>
           <Skeleton className='h-10 w-64' />
           <Skeleton className='h-96' />
@@ -238,7 +238,7 @@ export default function PatientDetailPage() {
   if (!profile) return null
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-blue-950 dark:to-background'>
+    <div className='min-h-screen bg-gradient-to-b from-muted to-background dark:from-blue-950 dark:to-background'>
       {/* Header */}
       <header className='border-b bg-white/80 backdrop-blur dark:bg-background/80'>
         <div className='mx-auto flex max-w-6xl items-center gap-4 p-4'>

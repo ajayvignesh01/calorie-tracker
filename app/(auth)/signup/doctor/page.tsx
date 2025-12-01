@@ -61,7 +61,7 @@ export default function DoctorSignupPage() {
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4 dark:from-blue-950 dark:to-background'>
+    <div className='flex min-h-screen items-center justify-center bg-gradient-to-b from-muted to-background p-4 dark:from-blue-950 dark:to-background'>
       <Card className='w-full max-w-md'>
         <CardHeader className='text-center'>
           <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900'>
