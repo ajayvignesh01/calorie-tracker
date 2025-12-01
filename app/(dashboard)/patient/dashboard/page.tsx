@@ -10,7 +10,6 @@ import { Check, Upload, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import heic2any from 'heic2any'
 
 interface FoodResult {
   foodName: string
@@ -42,6 +41,8 @@ export default function Home() {
         if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
           setLoading(true)
           try {
+            // Dynamically import heic2any only when needed (browser-only)
+            const heic2any = (await import('heic2any')).default
             const convertedBlob = await heic2any({
               blob: file,
               toType: 'image/jpeg',
