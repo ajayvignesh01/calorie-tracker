@@ -1,6 +1,6 @@
 'use client'
 
-import { LifeBuoy, LogOut, Send, Stethoscope, Users } from 'lucide-react'
+import { LayoutDashboard, LifeBuoy, LogOut, Send, Stethoscope } from 'lucide-react'
 import * as React from 'react'
 
 import { NavMain } from '@/components/nav-main'
@@ -20,16 +20,11 @@ import { useRouter } from 'next/navigation'
 const data = {
   navMain: [
     {
-      title: 'Patients',
+      title: 'Dashboard',
       url: '/doctor/dashboard',
-      icon: Users,
+      icon: LayoutDashboard,
       isActive: true,
-      items: [
-        {
-          title: 'Dashboard',
-          url: '/doctor/dashboard'
-        }
-      ]
+      items: []
     }
   ],
   navSecondary: [

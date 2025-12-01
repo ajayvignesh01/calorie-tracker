@@ -1,6 +1,6 @@
 'use client'
 
-import { Command, LifeBuoy, Send, SquareTerminal, User } from 'lucide-react'
+import { Command, LayoutDashboard, LifeBuoy, History, Send, User, UserPlus } from 'lucide-react'
 import * as React from 'react'
 
 import { NavMain } from '@/components/nav-main'
@@ -19,89 +19,33 @@ import {
 const data = {
   navMain: [
     {
-      title: 'Meals',
-      url: '#',
-      icon: SquareTerminal,
+      title: 'Dashboard',
+      url: '/patient/dashboard',
+      icon: LayoutDashboard,
       isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '/patient/history'
-        }
-      ]
+      items: []
     },
     {
-      title: 'My Profile',
+      title: 'History',
+      url: '/patient/history',
+      icon: History,
+      isActive: false,
+      items: []
+    },
+    {
+      title: 'Profile',
       url: '/patient/profile',
       icon: User,
       isActive: false,
       items: []
+    },
+    {
+      title: 'Onboarding',
+      url: '/patient/onboarding',
+      icon: UserPlus,
+      isActive: false,
+      items: []
     }
-    // {
-    //   title: 'Models',
-    //   url: '#',
-    //   icon: Bot,
-    //   items: [
-    //     {
-    //       title: 'Genesis',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Explorer',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Quantum',
-    //       url: '#'
-    //     }
-    //   ]
-    // },
-    // {
-    //   title: 'Documentation',
-    //   url: '#',
-    //   icon: BookOpen,
-    //   items: [
-    //     {
-    //       title: 'Introduction',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Get Started',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Tutorials',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Changelog',
-    //       url: '#'
-    //     }
-    //   ]
-    // },
-    // {
-    //   title: 'Settings',
-    //   url: '#',
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: 'General',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Team',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Billing',
-    //       url: '#'
-    //     },
-    //     {
-    //       title: 'Limits',
-    //       url: '#'
-    //     }
-    //   ]
-    // }
   ],
   navSecondary: [
     {
