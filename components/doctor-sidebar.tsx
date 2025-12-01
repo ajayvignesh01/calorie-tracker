@@ -1,6 +1,6 @@
 'use client'
 
-import { LifeBuoy, Send, Stethoscope, Users, LogOut } from 'lucide-react'
+import { LifeBuoy, LogOut, Send, Stethoscope, Users } from 'lucide-react'
 import * as React from 'react'
 
 import { NavMain } from '@/components/nav-main'
@@ -52,7 +52,7 @@ export function DoctorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
-    router.push('/doctor/login')
+    router.push('/login/doctor')
   }
 
   return (

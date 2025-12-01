@@ -122,14 +122,14 @@ export default function DoctorSignupPage() {
 
           <p className='mt-6 text-center text-sm text-muted-foreground'>
             Already have an account?{' '}
-            <a href='/doctor/login' className='text-primary hover:underline'>
+            <a href='/login/doctor' className='text-primary hover:underline'>
               Sign in
             </a>
           </p>
 
           <p className='mt-2 text-center text-sm text-muted-foreground'>
             Not a doctor?{' '}
-            <a href='/signup' className='text-primary hover:underline'>
+            <a href='/signup/patient' className='text-primary hover:underline'>
               Patient signup
             </a>
           </p>

@@ -32,16 +32,24 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Public routes that don't need auth (API routes handle their own auth)
-  const publicRoutes = ['/login', '/signup', '/doctor/login', '/doctor/signup', '/error', '/api']
+  const publicRoutes = [
+    '/login',
+    '/login/patient',
+    '/signup/patient',
+    '/login/doctor',
+    '/signup/doctor',
+    '/error',
+    '/api'
+  ]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
   // If no user and trying to access protected route, redirect to appropriate login
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
     if (pathname.startsWith('/doctor')) {
-      url.pathname = '/doctor/login'
+      url.pathname = '/login/doctor'
     } else {
-      url.pathname = '/login'
+      url.pathname = '/login/patient'
     }
     return NextResponse.redirect(url)
   }
@@ -57,32 +65,64 @@ export async function updateSession(request: NextRequest) {
     const isDoctor = profile?.role === 'doctor'
     const isDoctorRoute = pathname.startsWith('/doctor')
 
-    // Doctor trying to access user routes -> redirect to doctor dashboard
-    if (isDoctor && !isDoctorRoute && !isPublicRoute) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/doctor/dashboard'
-      return NextResponse.redirect(url)
+    const url = request.nextUrl.clone()
+
+    // If trying to access "/", redirect to the appropriate dashboard
+    if (pathname === '/') {
+      if (isDoctor) {
+        url.pathname = '/doctor/dashboard'
+        return NextResponse.redirect(url)
+      } else {
+        url.pathname = '/patient/dashboard'
+        return NextResponse.redirect(url)
+      }
     }
 
-    // User trying to access doctor routes -> redirect to user home
-    if (!isDoctor && isDoctorRoute && !isPublicRoute) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
+    // If trying to access root "/patient" or "/doctor", redirect to the appropriate dashboard
+    if (pathname === '/doctor') {
+      if (isDoctor) {
+        url.pathname = '/doctor/dashboard'
+        return NextResponse.redirect(url)
+      } else {
+        url.pathname = '/patient/dashboard'
+        return NextResponse.redirect(url)
+      }
+    }
+    if (pathname === '/patient') {
+      if (isDoctor) {
+        url.pathname = '/patient/dashboard'
+        return NextResponse.redirect(url)
+      } else {
+        url.pathname = '/doctor/dashboard'
+        return NextResponse.redirect(url)
+      }
     }
 
-    // Logged in doctor trying to access doctor login -> redirect to dashboard
-    if (isDoctor && pathname === '/doctor/login') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/doctor/dashboard'
-      return NextResponse.redirect(url)
+    // If logged in and trying to access different user routes, redirect to the appropriate dashboard
+    if (isDoctor) {
+      // If trying to access a patient route as a doctor, redirect to the doctor dashboard
+      if (!isDoctorRoute && !isPublicRoute) {
+        url.pathname = '/doctor/dashboard'
+        return NextResponse.redirect(url)
+      }
+    } else {
+      // If trying to access a doctor route as a patient, redirect to the patient dashboard
+      if (isDoctorRoute && !isPublicRoute) {
+        url.pathname = '/patient/dashboard'
+        return NextResponse.redirect(url)
+      }
     }
 
-    // Logged in user trying to access user login -> redirect to home
-    if (!isDoctor && pathname === '/login') {
+    // If logged in and trying to access /login or /signup, redirect to the appropriate dashboard
+    if (user && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
       const url = request.nextUrl.clone()
-      url.pathname = '/'
-      return NextResponse.redirect(url)
+      if (isDoctor) {
+        url.pathname = '/doctor/dashboard'
+        return NextResponse.redirect(url)
+      } else {
+        url.pathname = '/patient/dashboard'
+        return NextResponse.redirect(url)
+      }
     }
   }
 

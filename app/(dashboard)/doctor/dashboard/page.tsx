@@ -14,16 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createClient } from '@/lib/supabase/client'
-import {
-  Activity,
-  Plus,
-  Search,
-  Trash2,
-  TrendingDown,
-  TrendingUp,
-  User,
-  Users
-} from 'lucide-react'
+import { Activity, Plus, Search, Trash2, TrendingDown, TrendingUp, User, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
@@ -45,7 +36,11 @@ export default function DoctorDashboardPage() {
   const [patients, setPatients] = useState<Patient[]>([])
   const [loading, setLoading] = useState(true)
   const [searchEmail, setSearchEmail] = useState('')
-  const [searchResult, setSearchResult] = useState<{ id: string; email: string; full_name: string | null } | null>(null)
+  const [searchResult, setSearchResult] = useState<{
+    id: string
+    email: string
+    full_name: string | null
+  } | null>(null)
   const [searchError, setSearchError] = useState<string | null>(null)
   const [searching, setSearching] = useState(false)
   const [addingPatient, setAddingPatient] = useState(false)
@@ -60,7 +55,7 @@ export default function DoctorDashboardPage() {
     } = await supabase.auth.getUser()
 
     if (!user) {
-      router.push('/doctor/login')
+      router.push('/login/doctor')
       return
     }
 
@@ -72,7 +67,7 @@ export default function DoctorDashboardPage() {
       .single()
 
     if (!profile || profile.role !== 'doctor') {
-      router.push('/doctor/login')
+      router.push('/login/doctor')
       return
     }
 
@@ -150,7 +145,9 @@ export default function DoctorDashboardPage() {
       }
     } catch (err) {
       console.error('Search error:', err)
-      setSearchError(`Failed to search for patient: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      setSearchError(
+        `Failed to search for patient: ${err instanceof Error ? err.message : 'Unknown error'}`
+      )
     }
 
     setSearching(false)
@@ -326,9 +323,7 @@ export default function DoctorDashboardPage() {
                       </p>
                     </div>
 
-                    {searchError && (
-                      <p className='text-sm text-destructive'>{searchError}</p>
-                    )}
+                    {searchError && <p className='text-sm text-destructive'>{searchError}</p>}
 
                     {searchResult && (
                       <Card>
@@ -405,20 +400,24 @@ export default function DoctorDashboardPage() {
                           <div className='flex items-center justify-between text-sm'>
                             <span className='text-muted-foreground'>Today&apos;s Calories</span>
                             <span className='font-medium'>
-                              {patient.todayCalories || 0} / {patient.profile?.daily_calorie_target || '—'}
+                              {patient.todayCalories || 0} /{' '}
+                              {patient.profile?.daily_calorie_target || '—'}
                             </span>
                           </div>
                           {patient.profile?.daily_calorie_target && (
                             <div className='mt-1 h-2 rounded-full bg-muted'>
                               <div
                                 className={`h-2 rounded-full transition-all ${
-                                  (patient.todayCalories || 0) > patient.profile.daily_calorie_target
+                                  (patient.todayCalories || 0) >
+                                  patient.profile.daily_calorie_target
                                     ? 'bg-destructive'
                                     : 'bg-green-500'
                                 }`}
                                 style={{
                                   width: `${Math.min(
-                                    ((patient.todayCalories || 0) / patient.profile.daily_calorie_target) * 100,
+                                    ((patient.todayCalories || 0) /
+                                      patient.profile.daily_calorie_target) *
+                                      100,
                                     100
                                   )}%`
                                 }}

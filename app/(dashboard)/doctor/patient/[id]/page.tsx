@@ -102,7 +102,7 @@ export default function PatientDetailPage() {
     } = await supabase.auth.getUser()
 
     if (!user) {
-      router.push('/doctor/login')
+      router.push('/login/doctor')
       return
     }
 
@@ -253,7 +253,9 @@ export default function PatientDetailPage() {
             </div>
             <div>
               <h1 className='text-xl font-semibold'>Patient Details</h1>
-              <p className='text-sm text-muted-foreground'>{profile.full_name || 'Unknown Patient'}</p>
+              <p className='text-sm text-muted-foreground'>
+                {profile.full_name || 'Unknown Patient'}
+              </p>
             </div>
           </div>
         </div>
@@ -275,12 +277,14 @@ export default function PatientDetailPage() {
                 <span className='font-medium'>{profile.full_name || 'Not set'}</span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Calendar className='h-4 w-4' />
                   Age
                 </span>
                 <span className='font-medium'>
-                  {profile.date_of_birth ? `${calculateAge(profile.date_of_birth)} years` : 'Not set'}
+                  {profile.date_of_birth
+                    ? `${calculateAge(profile.date_of_birth)} years`
+                    : 'Not set'}
                 </span>
               </div>
               <div className='flex items-center justify-between'>
@@ -288,18 +292,22 @@ export default function PatientDetailPage() {
                 <span className='font-medium capitalize'>{profile.gender || 'Not set'}</span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Ruler className='h-4 w-4' />
                   Height
                 </span>
-                <span className='font-medium'>{profile.height_cm ? `${profile.height_cm} cm` : 'Not set'}</span>
+                <span className='font-medium'>
+                  {profile.height_cm ? `${profile.height_cm} cm` : 'Not set'}
+                </span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Scale className='h-4 w-4' />
                   Weight
                 </span>
-                <span className='font-medium'>{profile.weight_kg ? `${profile.weight_kg} kg` : 'Not set'}</span>
+                <span className='font-medium'>
+                  {profile.weight_kg ? `${profile.weight_kg} kg` : 'Not set'}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -319,13 +327,15 @@ export default function PatientDetailPage() {
                 </span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   {profile.goal === 'lose' && <TrendingDown className='h-4 w-4' />}
                   {profile.goal === 'gain' && <TrendingUp className='h-4 w-4' />}
                   {profile.goal === 'maintain' && <Target className='h-4 w-4' />}
                   Goal
                 </span>
-                <span className='font-medium'>{profile.goal ? goalLabels[profile.goal] : 'Not set'}</span>
+                <span className='font-medium'>
+                  {profile.goal ? goalLabels[profile.goal] : 'Not set'}
+                </span>
               </div>
               <div className='flex items-center justify-between'>
                 <span className='text-muted-foreground'>Daily Calories</span>
@@ -347,7 +357,9 @@ export default function PatientDetailPage() {
                 <Activity className='h-5 w-5' />
                 Recent Averages
               </CardTitle>
-              <CardDescription>Based on last {weeklyStats.daysTracked} days with logged entries</CardDescription>
+              <CardDescription>
+                Based on last {weeklyStats.daysTracked} days with logged entries
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
@@ -364,15 +376,21 @@ export default function PatientDetailPage() {
                 </div>
                 <div className='rounded-lg bg-blue-500/10 p-4 text-center'>
                   <p className='text-sm text-muted-foreground'>Avg Protein</p>
-                  <p className='text-2xl font-bold text-blue-500'>{Math.round(weeklyStats.avgProtein)}g</p>
+                  <p className='text-2xl font-bold text-blue-500'>
+                    {Math.round(weeklyStats.avgProtein)}g
+                  </p>
                 </div>
                 <div className='rounded-lg bg-green-500/10 p-4 text-center'>
                   <p className='text-sm text-muted-foreground'>Avg Carbs</p>
-                  <p className='text-2xl font-bold text-green-500'>{Math.round(weeklyStats.avgCarbs)}g</p>
+                  <p className='text-2xl font-bold text-green-500'>
+                    {Math.round(weeklyStats.avgCarbs)}g
+                  </p>
                 </div>
                 <div className='rounded-lg bg-yellow-500/10 p-4 text-center'>
                   <p className='text-sm text-muted-foreground'>Avg Fat</p>
-                  <p className='text-2xl font-bold text-yellow-500'>{Math.round(weeklyStats.avgFat)}g</p>
+                  <p className='text-2xl font-bold text-yellow-500'>
+                    {Math.round(weeklyStats.avgFat)}g
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -395,7 +413,10 @@ export default function PatientDetailPage() {
           <CardContent>
             <div className='grid grid-cols-7 gap-1'>
               {weekDays.map((day) => (
-                <div key={day} className='p-2 text-center text-sm font-medium text-muted-foreground'>
+                <div
+                  key={day}
+                  className='p-2 text-center text-sm font-medium text-muted-foreground'
+                >
                   {day}
                 </div>
               ))}
@@ -414,7 +435,9 @@ export default function PatientDetailPage() {
                 >
                   {day && (
                     <>
-                      <div className={`text-sm font-medium ${isToday(day.date) ? 'text-primary' : ''}`}>
+                      <div
+                        className={`text-sm font-medium ${isToday(day.date) ? 'text-primary' : ''}`}
+                      >
                         {day.date.getDate()}
                       </div>
                       {day.entries.length > 0 && (
@@ -453,7 +476,8 @@ export default function PatientDetailPage() {
                     })}
                   </CardTitle>
                   <CardDescription>
-                    {selectedDay.entries.length} food{selectedDay.entries.length !== 1 ? 's' : ''} logged
+                    {selectedDay.entries.length} food{selectedDay.entries.length !== 1 ? 's' : ''}{' '}
+                    logged
                   </CardDescription>
                 </div>
                 <Button variant='ghost' size='sm' onClick={() => setSelectedDay(null)}>
@@ -470,7 +494,9 @@ export default function PatientDetailPage() {
                 </div>
                 <div className='rounded-lg bg-blue-500/10 p-2 text-center'>
                   <p className='text-xs text-blue-500'>Protein</p>
-                  <p className='font-bold text-blue-500'>{selectedDay.totals.protein.toFixed(1)}g</p>
+                  <p className='font-bold text-blue-500'>
+                    {selectedDay.totals.protein.toFixed(1)}g
+                  </p>
                 </div>
                 <div className='rounded-lg bg-green-500/10 p-2 text-center'>
                   <p className='text-xs text-green-500'>Carbs</p>
@@ -489,7 +515,9 @@ export default function PatientDetailPage() {
                     <div className='flex items-start justify-between'>
                       <div>
                         <p className='font-medium'>{entry.food_name}</p>
-                        {entry.quantity && <p className='text-sm text-muted-foreground'>{entry.quantity}</p>}
+                        {entry.quantity && (
+                          <p className='text-sm text-muted-foreground'>{entry.quantity}</p>
+                        )}
                       </div>
                       <p className='font-semibold text-orange-500'>{entry.calories} cal</p>
                     </div>

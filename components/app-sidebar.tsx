@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  Command,
-  LifeBuoy,
-  Send,
-  SquareTerminal,
-  User
-} from 'lucide-react'
+import { Command, LifeBuoy, Send, SquareTerminal, User } from 'lucide-react'
 import * as React from 'react'
 
 import { NavMain } from '@/components/nav-main'
@@ -32,21 +26,13 @@ const data = {
       items: [
         {
           title: 'History',
-          url: '/history'
-        },
-        {
-          title: 'Add',
-          url: '#'
-        },
-        {
-          title: 'Analyze',
-          url: '/'
+          url: '/patient/history'
         }
       ]
     },
     {
       title: 'My Profile',
-      url: '/profile',
+      url: '/patient/profile',
       icon: User,
       isActive: false,
       items: []

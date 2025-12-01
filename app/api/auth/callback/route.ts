@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
         // Redirect to onboarding if not completed
         if (!profile || !profile.onboarding_completed) {
-          next = '/onboarding'
+          next = '/patient/onboarding'
         }
       }
 

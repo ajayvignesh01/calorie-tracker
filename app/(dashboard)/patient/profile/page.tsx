@@ -77,7 +77,7 @@ export default function ProfilePage() {
       } = await supabase.auth.getUser()
 
       if (!user) {
-        router.push('/login')
+        router.push('/login/patient')
         return
       }
 
@@ -91,11 +91,11 @@ export default function ProfilePage() {
       if (profileData) {
         setProfile(profileData)
         if (!profileData.onboarding_completed) {
-          router.push('/onboarding')
+          router.push('/patient/onboarding')
           return
         }
       } else {
-        router.push('/onboarding')
+        router.push('/patient/onboarding')
         return
       }
 
@@ -168,7 +168,7 @@ export default function ProfilePage() {
             <p className='text-muted-foreground'>View and manage your profile settings</p>
           </div>
           <Button variant='outline' asChild>
-            <Link href='/onboarding'>
+            <Link href='/patient/onboarding'>
               <Pencil className='mr-2 size-4' />
               Edit Profile
             </Link>
@@ -197,7 +197,7 @@ export default function ProfilePage() {
                       {todayStats.calories} / {profile.daily_calorie_target}
                     </span>
                   </div>
-                  <div className='bg-muted h-2 rounded-full'>
+                  <div className='h-2 rounded-full bg-muted'>
                     <div
                       className={`h-2 rounded-full transition-all ${getProgressColor(todayStats.calories, profile.daily_calorie_target)}`}
                       style={{
@@ -215,7 +215,7 @@ export default function ProfilePage() {
                       {todayStats.protein.toFixed(0)}g / {profile.daily_protein_target}g
                     </span>
                   </div>
-                  <div className='bg-muted h-2 rounded-full'>
+                  <div className='h-2 rounded-full bg-muted'>
                     <div
                       className='h-2 rounded-full bg-blue-500 transition-all'
                       style={{
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                       {todayStats.carbs.toFixed(0)}g / {profile.daily_carbs_target}g
                     </span>
                   </div>
-                  <div className='bg-muted h-2 rounded-full'>
+                  <div className='h-2 rounded-full bg-muted'>
                     <div
                       className='h-2 rounded-full bg-green-500 transition-all'
                       style={{
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                       {todayStats.fat.toFixed(0)}g / {profile.daily_fat_target}g
                     </span>
                   </div>
-                  <div className='bg-muted h-2 rounded-full'>
+                  <div className='h-2 rounded-full bg-muted'>
                     <div
                       className='h-2 rounded-full bg-yellow-500 transition-all'
                       style={{
@@ -280,12 +280,14 @@ export default function ProfilePage() {
                 <span className='font-medium'>{profile.full_name || 'Not set'}</span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Calendar className='size-4' />
                   Age
                 </span>
                 <span className='font-medium'>
-                  {profile.date_of_birth ? `${calculateAge(profile.date_of_birth)} years` : 'Not set'}
+                  {profile.date_of_birth
+                    ? `${calculateAge(profile.date_of_birth)} years`
+                    : 'Not set'}
                 </span>
               </div>
               <div className='flex items-center justify-between'>
@@ -293,7 +295,7 @@ export default function ProfilePage() {
                 <span className='font-medium capitalize'>{profile.gender || 'Not set'}</span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Ruler className='size-4' />
                   Height
                 </span>
@@ -302,7 +304,7 @@ export default function ProfilePage() {
                 </span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   <Scale className='size-4' />
                   Weight
                 </span>
@@ -329,7 +331,7 @@ export default function ProfilePage() {
                 </span>
               </div>
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground flex items-center gap-2'>
+                <span className='flex items-center gap-2 text-muted-foreground'>
                   {profile.goal === 'lose' && <TrendingDown className='size-4' />}
                   {profile.goal === 'gain' && <TrendingUp className='size-4' />}
                   {profile.goal === 'maintain' && <Target className='size-4' />}
@@ -355,32 +357,32 @@ export default function ProfilePage() {
           <CardContent>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <div className='rounded-lg bg-orange-500/10 p-4 text-center'>
-                <p className='text-muted-foreground text-sm'>Calories</p>
+                <p className='text-sm text-muted-foreground'>Calories</p>
                 <p className='text-3xl font-bold text-orange-500'>
                   {profile.daily_calorie_target || '—'}
                 </p>
-                <p className='text-muted-foreground text-xs'>kcal/day</p>
+                <p className='text-xs text-muted-foreground'>kcal/day</p>
               </div>
               <div className='rounded-lg bg-blue-500/10 p-4 text-center'>
-                <p className='text-muted-foreground text-sm'>Protein</p>
+                <p className='text-sm text-muted-foreground'>Protein</p>
                 <p className='text-3xl font-bold text-blue-500'>
                   {profile.daily_protein_target || '—'}
                 </p>
-                <p className='text-muted-foreground text-xs'>grams/day</p>
+                <p className='text-xs text-muted-foreground'>grams/day</p>
               </div>
               <div className='rounded-lg bg-green-500/10 p-4 text-center'>
-                <p className='text-muted-foreground text-sm'>Carbs</p>
+                <p className='text-sm text-muted-foreground'>Carbs</p>
                 <p className='text-3xl font-bold text-green-500'>
                   {profile.daily_carbs_target || '—'}
                 </p>
-                <p className='text-muted-foreground text-xs'>grams/day</p>
+                <p className='text-xs text-muted-foreground'>grams/day</p>
               </div>
               <div className='rounded-lg bg-yellow-500/10 p-4 text-center'>
-                <p className='text-muted-foreground text-sm'>Fat</p>
+                <p className='text-sm text-muted-foreground'>Fat</p>
                 <p className='text-3xl font-bold text-yellow-500'>
                   {profile.daily_fat_target || '—'}
                 </p>
-                <p className='text-muted-foreground text-xs'>grams/day</p>
+                <p className='text-xs text-muted-foreground'>grams/day</p>
               </div>
             </div>
           </CardContent>

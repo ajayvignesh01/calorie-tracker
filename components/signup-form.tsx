@@ -58,7 +58,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<'div'>)
                 <OAuthButtons />
               </Field>
               <FieldDescription className='text-center'>
-                Already have an account? <Link href='/login'>Sign in</Link>
+                Already have an account? <Link href='/login/patient'>Sign in</Link>
               </FieldDescription>
             </FieldGroup>
           </form>

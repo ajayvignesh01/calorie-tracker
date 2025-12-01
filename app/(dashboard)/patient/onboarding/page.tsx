@@ -125,7 +125,7 @@ export default function OnboardingPage() {
     } = await supabase.auth.getUser()
 
     if (!user) {
-      router.push('/login')
+      router.push('/login/patient')
       return
     }
 
@@ -156,7 +156,7 @@ export default function OnboardingPage() {
     }
 
     setLoading(false)
-    router.push('/profile')
+    router.push('/patient/profile')
   }
 
   return (
@@ -274,7 +274,7 @@ export default function OnboardingPage() {
                     }`}
                   >
                     <p className='font-medium'>{level.label}</p>
-                    <p className='text-muted-foreground text-sm'>{level.description}</p>
+                    <p className='text-sm text-muted-foreground'>{level.description}</p>
                   </button>
                 ))}
               </div>
@@ -295,7 +295,7 @@ export default function OnboardingPage() {
                     }`}
                   >
                     <p className='font-medium'>{goal.label}</p>
-                    <p className='text-muted-foreground text-sm'>{goal.description}</p>
+                    <p className='text-sm text-muted-foreground'>{goal.description}</p>
                   </button>
                 ))}
               </div>
@@ -303,11 +303,7 @@ export default function OnboardingPage() {
 
             {/* Navigation */}
             <div className='flex justify-between pt-4'>
-              <Button
-                variant='outline'
-                onClick={() => setStep((s) => s - 1)}
-                disabled={step === 1}
-              >
+              <Button variant='outline' onClick={() => setStep((s) => s - 1)} disabled={step === 1}>
                 <ArrowLeft className='mr-2 size-4' />
                 Back
               </Button>
