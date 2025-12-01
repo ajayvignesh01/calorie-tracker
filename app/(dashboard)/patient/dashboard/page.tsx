@@ -4,12 +4,12 @@ import type React from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase/client'
-import { Check, Upload, X } from 'lucide-react'
+import { Check, Trash2, Upload, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Input } from '@/components/ui/input'
 
 interface FoodResult {
   foodName: string
@@ -38,7 +38,12 @@ export default function Home() {
         let fileToRead = file
 
         // Check if the file is HEIC/HEIF and convert it to JPEG
-        if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+        if (
+          file.type === 'image/heic' ||
+          file.type === 'image/heif' ||
+          file.name.toLowerCase().endsWith('.heic') ||
+          file.name.toLowerCase().endsWith('.heif')
+        ) {
           setLoading(true)
           try {
             // Dynamically import heic2any only when needed (browser-only)
@@ -50,7 +55,9 @@ export default function Home() {
             })
             // heic2any can return Blob or Blob[], handle both cases
             const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
-            fileToRead = new File([blob], file.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' })
+            fileToRead = new File([blob], file.name.replace(/\.heic$/i, '.jpg'), {
+              type: 'image/jpeg'
+            })
           } catch (conversionError) {
             console.error('HEIC conversion error:', conversionError)
             setError('Failed to convert HEIC image. Please use JPG or PNG format.')
@@ -113,6 +120,12 @@ export default function Home() {
       updated[index] = { ...updated[index], [field]: value }
     }
     setResults(updated)
+  }
+
+  const deleteFoodResult = (index: number) => {
+    if (!results) return
+    const updated = results.filter((_, i) => i !== index)
+    setResults(updated.length > 0 ? updated : null)
   }
 
   const saveToHistory = async () => {
@@ -228,19 +241,30 @@ export default function Home() {
             {results.map((result, index) => (
               <Card key={index}>
                 <CardHeader>
-                  <div className='space-y-2'>
-                    <Input
-                      value={result.foodName}
-                      onChange={(e) => updateFoodResult(index, 'foodName', e.target.value)}
-                      className='text-lg font-semibold'
-                      placeholder='Food name'
-                    />
-                    <Input
-                      value={result.quantity}
-                      onChange={(e) => updateFoodResult(index, 'quantity', e.target.value)}
-                      className='text-sm text-muted-foreground'
-                      placeholder='Quantity'
-                    />
+                  <div className='flex items-start gap-2'>
+                    <div className='flex-1 space-y-2'>
+                      <Input
+                        value={result.foodName}
+                        onChange={(e) => updateFoodResult(index, 'foodName', e.target.value)}
+                        className='text-lg font-semibold'
+                        placeholder='Food name'
+                      />
+                      <Input
+                        value={result.quantity}
+                        onChange={(e) => updateFoodResult(index, 'quantity', e.target.value)}
+                        className='text-sm text-muted-foreground'
+                        placeholder='Quantity'
+                      />
+                    </div>
+                    <Button
+                      onClick={() => deleteFoodResult(index)}
+                      variant='ghost'
+                      size='icon'
+                      className='text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive'
+                      title='Delete food item'
+                    >
+                      <Trash2 className='size-4' />
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
